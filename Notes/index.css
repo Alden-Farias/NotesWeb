@@ -1,0 +1,91 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /*===== Colors =====*/
+    --primary-color: #1E72FF;
+    --input-color: #80868B;
+    --border-color: #80868B;
+    --bacground-color: #FFF;
+    /*===== Fuente y tipografia =====*/
+    --body-font: 'Roboto', sans-serif;
+    --normal-font-size: 1rem;
+    --small-font-size: .75rem;
+}
+
+textarea:focus, input:focus {
+    outline: none;
+}
+
+.fab-notes {
+    position: fixed;
+    background-color: #FFF;
+    width: 15vw;
+    height: 15vw;
+    border-radius: 100%;
+    background: #FFF;
+    border: none;
+    outline: none;
+    color: var(--primary-color);
+    font-size: 10vw;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    transition: .3s;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    right: 9%;
+    bottom: 6%;
+}
+
+.card-containter-notes {
+    box-sizing: border-box;
+    position: fixed;
+    display: none;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.16);
+    padding: 0 15px;
+}
+
+.card-notes {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: var(--bacground-color);
+    border-radius: 20px;
+    transition: 0.3s;
+    z-index: 10;
+    transition: 10s;
+}
+
+/* On mouse-over, add a deeper shadow */
+
+.card-notes:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.new-note-wrapper-notes {
+    padding: 20px;
+}
+
+.title-input-notes {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.note-textarea-notes {
+    display: block;
+    width: 100%;
+    height: 500px;
+    resize: none;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    margin-top: 20px;
+}
