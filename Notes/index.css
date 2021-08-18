@@ -32,7 +32,6 @@ textarea:focus, input:focus {
     color: var(--primary-color);
     font-size: 10vw;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    transition: .3s;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     right: 9%;
     bottom: 6%;
@@ -46,19 +45,31 @@ textarea:focus, input:focus {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.16);
     padding: 0 15px;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+    visibility: hidden;
+}
+
+.card-containter-notes.show {
+    visibility: visible;
+    opacity: 1;
 }
 
 .card-notes {
     position: relative;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(500%);
     /* Add shadows to create the "card" effect */
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     background-color: var(--bacground-color);
     border-radius: 20px;
-    transition: 0.3s;
     z-index: 10;
-    transition: 10s;
+    transition: transform 0.5s ease;
+}
+
+.card-notes.show {
+
+    transform: translateY(-50%);
 }
 
 /* On mouse-over, add a deeper shadow */
