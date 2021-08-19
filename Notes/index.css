@@ -4,6 +4,13 @@ body {
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: 'Product Sans';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Product Sans'), url('ProductSans-Regular.woff') format('woff');
+}
+
 :root {
     /*===== Colors =====*/
     --primary-color: #1E72FF;
@@ -32,10 +39,49 @@ textarea:focus, input:focus {
     color: var(--primary-color);
     font-size: 10vw;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    transition: .3s;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     right: 9%;
     bottom: 6%;
+}
+
+.fab-notes.pin {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    width: 10vw;
+    height: 10vw;
+    font-size: 8vw;
+    right: 0%;
+    bottom: 0%;
+    background-color: #ececec;
+    color: #5f5e5e;
+    border-radius: 2vw;
+}
+
+.fab-notes.save {
+    position: relative;
+    display: inline-flex;
+    align-items: center;    
+    justify-content: center;
+    box-sizing: border-box;
+    right: 0%;
+    bottom: 0%;
+    width: 10vw;
+    height: 10vw;
+    font-size: 8vw;
+    right: 0%;
+    bottom: 0%;
+    background-color: #ececec;
+    color: #5f5e5e;
+    border-radius: 2vw;
+}
+
+.fab-save-pin-wrapper {
+    display: inline-block;
 }
 
 .card-containter-notes {
@@ -46,20 +92,38 @@ textarea:focus, input:focus {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.16);
     padding: 0 15px;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+    
+}
+
+.card-containter-notes.show {
+    opacity: 1;
+}
+
+.card-dialog-wrapper {
+    position: relative;
+    top: 50%;
+    transform: translateY(500%);
+    text-align: right;
+    transition: transform 0.5s ease;
+}
+
+.card-dialog-wrapper.show {
+    transform: translateY(-50%);
 }
 
 .card-notes {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
     /* Add shadows to create the "card" effect */
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     background-color: var(--bacground-color);
     border-radius: 20px;
-    transition: 0.3s;
     z-index: 10;
-    transition: 10s;
 }
+
+/* .card-notes.show {
+    transform: translateY(-50%);
+} */
 
 /* On mouse-over, add a deeper shadow */
 
@@ -74,18 +138,58 @@ textarea:focus, input:focus {
 .title-input-notes {
     display: block;
     width: 100%;
+    font-size: 1.3rem;
+    font-family:'Product Sans';
     padding: 0;
     margin: 0;
     border: 0;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 .note-textarea-notes {
     display: block;
     width: 100%;
-    height: 500px;
-    resize: none;
+    text-align: left;
+    max-height: 70vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-family:'Product Sans';
     padding: 0;
-    margin: 0;
     border: 0;
-    margin-top: 20px;
+    margin: 20px 0 0;
+}
+
+.note-textarea-notes:focus {
+    outline: none;
+    border: none;
+}
+
+.note-textarea-placeholder-notes {
+    position: absolute;
+    transform: translateY(100%);
+    color: #757575;
+    font-family: "Product Sans";
+}
+
+.note-textarea-placeholder-notes.hide {
+    visibility: hidden;
 }
