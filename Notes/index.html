@@ -12,12 +12,34 @@
 </head>
 
 <body>
-    <button id="fab-add-note" class="fab-notes">+</button>
+    <section class="header-section">
+        <h1 class="header-notes">Notes</h1>
+    </section>
+    <section class="pinned-notes">
+        <p class="notes-header-notes">Pinned</p>
+        <div class="note-holder-notes">
+            <div id="pinned-notes-1" class="note-holder-notes">
+                <div class="card-display-note">
+                    <p class="note-title-notes">Title</p>
+                    <p class="note-body-notes">Note</p>
+                </div>
+            </div>
+            <div id="pinned-notes-2" class="note-holder-notes">
+                <div class="card-display-note">
+                    <p class="note-title-notes">Title</p>
+                    <p class="note-body-notes">Note</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="other-notes">
+        <p class="notes-header-notes">Other</p>
+    </section>
     <div id="add-note-dialog-notes" class="card-containter-notes">
         <div id="card-dialog" class="card-dialog-wrapper">
             <div class="fab-save-pin-wrapper">
                 <button id="fab-close-note" class="fab-notes close">
-                    <svg viewBox="0 0 449.998 449.998" width="5vw" height="5vw">
+                    <svg viewBox="0 0 449.998 449.998" height="5vw">
                         <g>
                             <g>
                                 <polygon style="fill:#010002;" points="449.974,34.855 415.191,0 225.007,190.184 34.839,0 0.024,34.839 190.192,224.999 0.024,415.159 34.839,449.998 225.007,259.797 415.191,449.998 449.974,415.143 259.83,224.999"/>
@@ -27,12 +49,12 @@
 
                 </button>
                 <button id="fab-save-note" class="fab-notes save">
-                    <svg width="6vw" viewBox="0 0 8 6.1">
+                    <svg height="5vw" viewBox="0 0 8 6.1">
                         <path d="M2.54,4.81.65,2.92,0,3.56,2.54,6.1,8,.64,7.36,0Z" />
                     </svg>
                 </button>
                 <button id="fab-pin-note" class="fab-notes pin">
-                    <svg viewBox="0 0 256 256" width="5vw" height="5vw">
+                    <svg viewBox="0 0 256 256" height="5vw">
                         <path fill="#000"
                             d="M96.89,19.32c3.39,6 6.36,11 9.14,16.12 1.23,2.27 2.87,4.75 2.92,7.17 0.27,14.48 0.14,29 0.14,45.07 -3.36,-3.31 -5.58,-6.11 -8.37,-8.14C91.29,72.62 87.19,63.7 89.19,51.99c0.74,-4.25 -0.91,-7.77 -3.3,-11.51A53.41,53.41 0,0 1,77.19 9.42c0.19,-5.48 4,-9.36 9.5,-9.37q49.5,-0.09 99,0c5.64,0 9.42,4.07 9.48,10 0.11,11.63 -3.58,22.11 -9.61,32a16,16 0,0 0,-2.41 7.76c-0.19,21.5 -0.08,43 -0.15,64.5a7.19,7.19 0,0 0,3.14 6.57c21.66,17 33.44,39 33,66.87a16.34,16.34 0,0 1,-2.27 7.15c-6.66,-7.88 -16.4,-12.15 -19,-23.78C194.19,154.99 184.35,142.17 170.03,133.35c-4.69,-2.89 -7,-6.46 -6.89,-12.18q0.35,-37 0,-74a22.27,22.27 0,0 1,4.62 -14.25c2.88,-3.88 4.72,-8.53 7.41,-13.58Z" />
                         <path fill="#000"
@@ -53,6 +75,9 @@
         </div>
 
     </div>
+    <button id="fab-add-note" class="fab-notes">+</button>
+    <div id="snackbar"></div>
+    <script src="./../config.js"></script>
     <script src="./index.js"></script>
 </body>
 
