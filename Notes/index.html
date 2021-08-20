@@ -16,6 +16,16 @@
     <div id="add-note-dialog-notes" class="card-containter-notes">
         <div id="card-dialog" class="card-dialog-wrapper">
             <div class="fab-save-pin-wrapper">
+                <button id="fab-close-note" class="fab-notes close">
+                    <svg viewBox="0 0 449.998 449.998" width="5vw" height="5vw">
+                        <g>
+                            <g>
+                                <polygon style="fill:#010002;" points="449.974,34.855 415.191,0 225.007,190.184 34.839,0 0.024,34.839 190.192,224.999 0.024,415.159 34.839,449.998 225.007,259.797 415.191,449.998 449.974,415.143 259.83,224.999"/>
+                            </g>
+                        </g>
+                    </svg>
+
+                </button>
                 <button id="fab-save-note" class="fab-notes save">
                     <svg width="6vw" viewBox="0 0 8 6.1">
                         <path d="M2.54,4.81.65,2.92,0,3.56,2.54,6.1,8,.64,7.36,0Z" />
@@ -30,12 +40,12 @@
                         <path fill="#000"
                             d="M126.24,197.05L64.59,197.05c-9.2,0 -12.77,-3.37 -12.21,-12.75 1.51,-25.31 12.15,-46.11 31.91,-62 3.26,-2.63 6.16,-4.93 4.81,-9.9l16.88,18.14C89.19,140.68 76.19,155.64 72.98,177.99h13.43c22,0 44,-0.1 66,0.13a12.31,12.31 0,0 1,7.35 3c5.46,4.81 10.48,10.12 16.72,16.27h-30.4v5.89c0,17.16 0.06,34.33 0,51.49 0,8.53 -7.2,13.53 -14.33,10.15 -4.31,-2.05 -5.46,-5.95 -5.46,-10.34v-51.5Z" />
                     </svg>
-
                 </button>
             </div>
             <div class="card-notes">
                 <div class="new-note-wrapper-notes">
-                    <input class="title-input-notes" type="text" maxlength="20" placeholder="Title">
+                    <input id="note-title-notes" class="title-input-notes" type="text" maxlength="20"
+                        placeholder="Title">
                     <div id="note-body-placeholder-notes" class="note-textarea-placeholder-notes">Note</div>
                     <div id="note-body-notes" contenteditable="true" class="note-textarea-notes"></div>
                 </div>
