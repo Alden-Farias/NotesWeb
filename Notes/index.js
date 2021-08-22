@@ -2,20 +2,95 @@ Parse.initialize(config.APP_ID, config.JAVASCRIPT_KEY); //PASTE HERE YOUR Back4A
 Parse.serverURL = config.SERVER_URL
 
 if (!Parse.User.current()) {
-    window.location.href = "file:///C:/Users/alden/Programs/notesweb/Login/index.html";
+    window.location.href = config.LOGIN_PATH;
+}
+
+
+var leftPosFixed
+var leftPosVariable
+var difference
+function setVars() {
+    leftPosFixed = $(".header-notes-fixed").get(0).getBoundingClientRect().left
+    leftPosVariable = $(".header-notes").get(0).getBoundingClientRect().left
+    difference = leftPosVariable - leftPosFixed
+}
+$( window ).on("resize", function() {
+    leftPosFixed = $(".header-notes-fixed").get(0).getBoundingClientRect().left
+    leftPosVariable = $(".header-notes").get(0).getBoundingClientRect().left
+    difference = leftPosVariable - leftPosFixed
+})
+
+window.onload = setVars
+
+window.onscroll = function () { scrollFunction() };
+// 0.125 * window.innerWidth is 80px in 640px viewport height (Moto G4) and looks good hence 0.125 pr 12.5% of viewport height
+function scrollFunction() {
+    let bodyTop = $("body").get(0).getBoundingClientRect().top
+    let headerTop = $(".header-notes").get(0).getBoundingClientRect().top
+    // Length of the "Notes" text from its top to the top of the page and subtracting 12.5% of the viewport's height and subtracting 10 which is the bottom padding of the section 
+    let lengthFromTop = Math.abs(bodyTop - headerTop) - (0.125 * window.innerHeight) - 10/* bottom padding of header-section*/
+    let scroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+    if (scroll > lengthFromTop && scroll < lengthFromTop + (0.125 * window.innerHeight)) {
+        let diff = scroll - lengthFromTop
+        $(".header-notes").css("font-size", "" + 15/* initial font size i.e. 15vw */ - (((15 - 5.5555556/* final/desired font size i.e. 5.5555556vw */) / (0.125 * window.innerHeight)) * (scroll - lengthFromTop)) + "vw")
+        $(".header-notes").css("left", "" + leftPosVariable - ((difference / (0.125 * window.innerHeight)) * diff) + "px")
+        $(".header-section-fixed").removeClass("show")
+        $(".header-notes").css("visibility", "visible")
+    } else if (scroll < lengthFromTop) {
+        $(".header-notes").removeAttr('style')
+        $(".header-section-fixed").removeClass("show")
+        $(".header-notes").css("visibility", "visible")
+    } else if (scroll > lengthFromTop + (0.125 * window.innerHeight)) {
+        $(".header-notes").css("font-size", "" + 5.55556 + "vw")
+        $(".header-notes").css("visibility", "hidden")
+        sleep(0).then(() => {
+            $(".header-section-fixed").addClass("show")
+        })
+    }
+    // console.log(scroll)
 }
 
 function appendNote(title, body, isPinned, i) {
     let divToAppend = $("<div />", { html: '<p class="note-title-notes">' + title + '</p><p class="note-body-notes">' + body + '</p>' }).addClass("card-display-note")
-    if (i % 2 === 1) {
-        divToAppend.appendTo("#pinned-notes-1")
+    if (isPinned) {
+        if (i % 2 === 1) {
+            divToAppend.appendTo("#pinned-notes-1")
+        } else {
+            divToAppend.appendTo("#pinned-notes-2")
+        }
     } else {
-        divToAppend.appendTo("#pinned-notes-2")
+        if (i % 2 === 1) {
+            divToAppend.appendTo("#other-notes-1")
+        } else {
+            divToAppend.appendTo("#other-notes-2")
+        }
     }
 }
 
-appendNote("sagsfdgh", "fasfgefh", true, 1)
-appendNote("sags fpsg gggg gggg gggz fdgh", "fasgiuoaaaa aaaaa  aaaaaalm mmf gefh", true, 2)
+appendNote("Title", "Note", true, 1)
+appendNote("Title", "Note", true, 2)
+appendNote("Title", "Note", true, 1)
+appendNote("Title", "Note", true, 2)
+appendNote("Title", "Note", true, 1)
+appendNote("Title", "Note", true, 2)
+appendNote("Title", "Note", true, 1)
+appendNote("Title", "Note", true, 2)
+appendNote("Title", "Note", true, 1)
+appendNote("Title", "Note", true, 2)
+appendNote("Title", "Note", true, 1)
+appendNote("Title", "Note", true, 2)
+appendNote("Title", "Note", false, 1)
+appendNote("Title", "Note", false, 2)
+appendNote("Title", "Note", false, 1)
+appendNote("Title", "Note", false, 2)
+appendNote("Title", "Note", false, 1)
+appendNote("Title", "Note", false, 2)
+appendNote("Title", "Note", false, 1)
+appendNote("Title", "Note", false, 2)
+appendNote("Title", "Note", false, 1)
+appendNote("Title", "Note", false, 2)
+appendNote("Title", "Note", false, 1)
+appendNote("Title", "Note", false, 2)
 
 // console.log(Parse.User.current().get("username"))
 
