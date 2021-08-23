@@ -5,24 +5,34 @@ if (!Parse.User.current()) {
     window.location.href = config.LOGIN_PATH;
 }
 
+let pinnedNotes = [];
+let otherNotes = [];
+let newNoteOpen = false
+let noteIdentifier = {
+    pinned: undefined,
+    id: undefined
+}
 
-var leftPosFixed
-var leftPosVariable
-var difference
+let leftPosFixed;
+let leftPosVariable;
+let difference;
+
 function setVars() {
     leftPosFixed = $(".header-notes-fixed").get(0).getBoundingClientRect().left
     leftPosVariable = $(".header-notes").get(0).getBoundingClientRect().left
     difference = leftPosVariable - leftPosFixed
 }
-$( window ).on("resize", function() {
-    leftPosFixed = $(".header-notes-fixed").get(0).getBoundingClientRect().left
-    leftPosVariable = $(".header-notes").get(0).getBoundingClientRect().left
-    difference = leftPosVariable - leftPosFixed
+
+$(window).on("resize", function () {
+    setVars()
 })
 
 window.onload = setVars
 
-window.onscroll = function () { scrollFunction() };
+window.onscroll = function () {
+    scrollFunction()
+};
+
 // 0.125 * window.innerWidth is 80px in 640px viewport height (Moto G4) and looks good hence 0.125 pr 12.5% of viewport height
 function scrollFunction() {
     let bodyTop = $("body").get(0).getBoundingClientRect().top
@@ -47,19 +57,23 @@ function scrollFunction() {
             $(".header-section-fixed").addClass("show")
         })
     }
-    // console.log(scroll)
 }
 
+// Function that adds a "note card" to the div
 function appendNote(title, body, isPinned, i) {
-    let divToAppend = $("<div />", { html: '<p class="note-title-notes">' + title + '</p><p class="note-body-notes">' + body + '</p>' }).addClass("card-display-note")
+    let divToAppend
+    if (isPinned)
+        divToAppend = $("<div />", {html: '<p class="note-title-notes noselect">' + title + '</p><p class="note-body-notes noselect">' + body + '</p>'}).addClass("card-display-note").attr('id', "" + i + "-pinned")
+    else
+        divToAppend = $("<div />", {html: '<p class="note-title-notes noselect">' + title + '</p><p class="note-body-notes noselect">' + body + '</p>'}).addClass("card-display-note").attr('id', "" + i + "-other")
     if (isPinned) {
-        if (i % 2 === 1) {
+        if ((i + 1) % 2 === 1) {
             divToAppend.appendTo("#pinned-notes-1")
         } else {
             divToAppend.appendTo("#pinned-notes-2")
         }
     } else {
-        if (i % 2 === 1) {
+        if ((i + 1) % 2 === 1) {
             divToAppend.appendTo("#other-notes-1")
         } else {
             divToAppend.appendTo("#other-notes-2")
@@ -67,40 +81,51 @@ function appendNote(title, body, isPinned, i) {
     }
 }
 
-appendNote("Title", "Note", true, 1)
-appendNote("Title", "Note", true, 2)
-appendNote("Title", "Note", true, 1)
-appendNote("Title", "Note", true, 2)
-appendNote("Title", "Note", true, 1)
-appendNote("Title", "Note", true, 2)
-appendNote("Title", "Note", true, 1)
-appendNote("Title", "Note", true, 2)
-appendNote("Title", "Note", true, 1)
-appendNote("Title", "Note", true, 2)
-appendNote("Title", "Note", true, 1)
-appendNote("Title", "Note", true, 2)
-appendNote("Title", "Note", false, 1)
-appendNote("Title", "Note", false, 2)
-appendNote("Title", "Note", false, 1)
-appendNote("Title", "Note", false, 2)
-appendNote("Title", "Note", false, 1)
-appendNote("Title", "Note", false, 2)
-appendNote("Title", "Note", false, 1)
-appendNote("Title", "Note", false, 2)
-appendNote("Title", "Note", false, 1)
-appendNote("Title", "Note", false, 2)
-appendNote("Title", "Note", false, 1)
-appendNote("Title", "Note", false, 2)
+// Function that retrieves all the notes of the current user from the database
+function getNotes() {
+    const Note = Parse.Object.extend("Notes")
+    const query = new Parse.Query(Note);
+    query.equalTo("username", Parse.User.current().get("username"));
+    query.ascending("createdAt")
+    query.find().then((notes) => {
+        pinnedNotes = []
+        otherNotes = []
+        $("#pinned-notes-1").html('')
+        $("#pinned-notes-2").html('')
+        $("#other-notes-1").html('')
+        $("#other-notes-2").html('')
+        notes.forEach(element => {
+            const isPinned = element.get("isPinned")
+            if (isPinned)
+                pinnedNotes.push(element)
+            else
+                otherNotes.push(element)
+        });
+        for (let i = 0; i < pinnedNotes.length; i++) {
+            appendNote(pinnedNotes[i].get("title"), pinnedNotes[i].get("note"), pinnedNotes[i].get("isPinned"), i)
+        }
 
-// console.log(Parse.User.current().get("username"))
+        for (let i = 0; i < otherNotes.length; i++)
+            appendNote(otherNotes[i].get("title"), otherNotes[i].get("note"), otherNotes[i].get("isPinned"), i)
+    }, (error) => {
+        showSnackbar(error.message)
+    });
+}
 
-let newNoteOpen = false
+getNotes()
 
+// Function that waits for [ms] milliseconds
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function openDialog() {
+// Function that opens dialog with the title and note specified in the parameter
+function openDialog(title, note) {
+    $("#note-body-notes").text(note)
+    $("#note-title-notes").val(title)
+    if (note) {
+        noteBodyDivPlaceholder.addClass("hide")
+    }
     // Showing popup
     $("#add-note-dialog-notes").css("display", "block")
     // Function used to asynchronously show animation
@@ -111,6 +136,7 @@ function openDialog() {
     newNoteOpen = true
 }
 
+// Method to close the dialog and clear the inputs in the dialog
 function closeDialog() {
     $("#card-dialog").removeClass("show");
     $("#add-note-dialog-notes").removeClass("show");
@@ -130,7 +156,9 @@ function showSnackbar(text) {
     let snackbar = $("#snackbar")
     snackbar.addClass("show")
     snackbar.text(text)
-    setTimeout(function () { snackbar.removeClass("show") }, 3000);
+    setTimeout(function () {
+        snackbar.removeClass("show")
+    }, 3000);
 }
 
 function saveNote(note) {
@@ -148,6 +176,18 @@ function saveNote(note) {
     });
 }
 
+function updateNote(noteObject, note) {
+    noteObject.set("note", note.body);
+    noteObject.set("title", note.title);
+    noteObject.set("isPinned", note.pinned);
+    noteObject.save().then(() =>{
+
+        getNotes()
+    }, (error) => {
+        // Handle error
+    })
+}
+
 function createNote(pinned) {
     let noteBody = $("#note-body-notes").text()
     let noteTitle = $("#note-title-notes").val()
@@ -160,7 +200,20 @@ function createNote(pinned) {
         body: noteBody,
         pinned: pinned
     }
-    saveNote(note)
+    if (noteIdentifier.id !== undefined) {
+        if (noteIdentifier.pinned) {
+            updateNote(pinnedNotes[noteIdentifier.id], note)
+        }
+        else {
+            updateNote(otherNotes[noteIdentifier.id], note)
+        }
+        noteIdentifier = {
+            pinned: undefined,
+            id: undefined
+        }
+    } else {
+        saveNote(note)
+    }
     closeDialog()
 }
 
@@ -199,14 +252,53 @@ $("#fab-close-note").on("click", function () {
 
 // Called when save note button is clicked
 $("#fab-save-note").on("click", function () {
-    createNote(false)
+    if (noteIdentifier.id !== undefined) {
+        createNote(noteIdentifier.pinned)
+    } else
+        createNote(false)
 })
 
 // Called when pin note button is pressed
 $("#fab-pin-note").on("click", function () {
-    createNote(true)
+    if (noteIdentifier.id !== undefined) {
+        createNote(!noteIdentifier.pinned)
+    } else
+        createNote(true)
 })
 
+$("#pinned-notes-1").on("click", "div", function (elem) {
+    var index = $(this).attr("id").match(/\d+/)[0];
+    noteIdentifier = {
+        pinned: true,
+        id: parseInt(index)
+    }
+    openDialog(pinnedNotes[index].get("title"), pinnedNotes[index].get("note"))
+})
+$("#pinned-notes-2").on("click", "div", function (elem) {
+    var index = $(this).attr("id").match(/\d+/)[0];
+    noteIdentifier = {
+        pinned: true,
+        id: parseInt(index)
+    }
+    openDialog(pinnedNotes[index].get("title"), pinnedNotes[index].get("note"))
+})
+
+$("#other-notes-1").on("click", "div", function (elem) {
+    var index = $(this).attr("id").match(/\d+/)[0];
+    noteIdentifier = {
+        pinned: false,
+        id: parseInt(index)
+    }
+    openDialog(otherNotes[index].get("title"), otherNotes[index].get("note"))
+})
+$("#other-notes-2").on("click", "div", function (elem) {
+    var index = $(this).attr("id").match(/\d+/)[0];
+    noteIdentifier = {
+        pinned: false,
+        id: parseInt(index)
+    }
+    openDialog(otherNotes[index].get("title"), otherNotes[index].get("note"))
+})
 // Used to detect back button pressed on mobile devices
 $(window).on("navigate", function (event, data) {
     let direction = data.state.direction;
