@@ -33,6 +33,8 @@ window.onscroll = function () {
     scrollFunction()
 };
 
+/***************** One UI Animation, noice *****************/
+
 // 0.125 * window.innerWidth is 80px in 640px viewport height (Moto G4) and looks good hence 0.125 pr 12.5% of viewport height
 function scrollFunction() {
     let bodyTop = $("body").get(0).getBoundingClientRect().top
@@ -63,9 +65,9 @@ function scrollFunction() {
 function appendNote(title, body, isPinned, i) {
     let divToAppend
     if (isPinned)
-        divToAppend = $("<div />", {html: '<p class="note-title-notes noselect">' + title + '</p><p class="note-body-notes noselect">' + body + '</p>'}).addClass("card-display-note").attr('id', "" + i + "-pinned")
+        divToAppend = $("<div />", { html: '<p class="note-title-notes noselect">' + title + '</p><p class="note-body-notes noselect">' + body + '</p>' }).addClass("card-display-note").attr('id', "" + i + "-pinned")
     else
-        divToAppend = $("<div />", {html: '<p class="note-title-notes noselect">' + title + '</p><p class="note-body-notes noselect">' + body + '</p>'}).addClass("card-display-note").attr('id', "" + i + "-other")
+        divToAppend = $("<div />", { html: '<p class="note-title-notes noselect">' + title + '</p><p class="note-body-notes noselect">' + body + '</p>' }).addClass("card-display-note").attr('id', "" + i + "-other")
     if (isPinned) {
         if ((i + 1) % 2 === 1) {
             divToAppend.appendTo("#pinned-notes-1")
@@ -187,6 +189,7 @@ function saveNote(note) {
     noteObject.set("isPinned", note.pinned);
     noteObject.save().then(() => {
         // Successful 
+        getNotes();
     }, (error) => {
         // If error encountered
         // Showing a snackbar to the user saying that the item was not added
@@ -197,7 +200,7 @@ function updateNote(noteObject, note) {
     noteObject.set("note", note.body);
     noteObject.set("title", note.title);
     noteObject.set("isPinned", note.pinned);
-    noteObject.save().then(() =>{
+    noteObject.save().then(() => {
 
         getNotes()
     }, (error) => {
@@ -230,9 +233,36 @@ function createNote(pinned) {
     closeDialog()
 }
 
+let fabIsOpen = false
+
+// $(window).click(function () {
+//     if (fabIsOpen) {
+//         $("#fab-select-note").removeClass("show")
+//         $("#fab-add-note").removeClass("show")
+//         $("#plus-to-animate").css("transform", "rotate(0deg)")
+//         fabIsOpen = false
+//     }
+// });
+
+function closeMenu() {
+    $("#fab-select-note").removeClass("show")
+    $("#fab-add-note").removeClass("show")
+    $("#plus-to-animate").removeAttr('style')
+    fabIsOpen = false
+}
+
 // Called when the FloatingActionButton is clicked
-$("#fab-add-note").click(function (e) {
-    openDialog()
+$("#fab-notes").click(function (e) {
+    if (!fabIsOpen) {
+        $("#fab-select-note").addClass("show")
+        $("#fab-add-note").addClass("show")
+        $("#plus-to-animate").css("transform", "rotate(45deg)")
+        fabIsOpen = true
+    } else {
+        closeMenu()
+    }
+
+    // openDialog()
 });
 
 let noteBodyDiv = $("#note-body-notes");

@@ -73,7 +73,16 @@
         </div>
 
     </div>
-    <button id="fab-add-note" class="fab-notes noselect">+</button>
+    <div class="fab-wrapper">
+        <button id="fab-select-note" class="fab-select noselect">
+            <svg viewBox="0 0 24 24" height="7vw">
+            <path
+            fill="var(--primary-color)"
+            d="M6,19c0,1.1 0.9,2 2,2h8c1.1,0 2,-0.9 2,-2V7H6v12zM19,4h-3.5l-1,-1h-5l-1,1H5v2h14V4z" />
+        </svg></button>
+        <button id="fab-add-note" class="fab-add noselect">+</button>
+        <button id="fab-notes" class="fab-notes noselect" onblur="closeMenu()"><span id="plus-to-animate" class="fab-animation">+</span></button>
+    </div>
     <div id="snackbar"></div>
     <script src="./../config.js"></script>
     <script src="./index.js"></script>

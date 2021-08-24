@@ -50,7 +50,7 @@ body {
     padding: 10px 0;
     box-sizing: border-box;
     background-color: rgba(255, 255, 255, 0.80);
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(2.5px);
     transition: box-shadow 0.3s ease-in;
 }
 
@@ -113,6 +113,7 @@ body {
 
 .note-title-notes {
     font-family: 'Product Sans';
+    overflow-wrap: anywhere;
     max-width: 100%;
     padding: 0 3vw;
     font-weight: 600;
@@ -143,8 +144,18 @@ textarea:focus, input:focus {
     outline: none;
 }
 
-.fab-notes {
+.fab-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
     position: fixed;
+    right: 9%;
+    bottom: 6%;
+    /* height: 45vw; */
+}
+
+.fab-notes {
     background-color: #FFF;
     width: 15vw;
     height: 15vw;
@@ -156,8 +167,60 @@ textarea:focus, input:focus {
     font-size: 10vw;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    right: 9%;
-    bottom: 6%;
+    z-index: 2;
+    transition: transform 0.2s ease;
+}
+
+.fab-animation {
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.fab-add {
+    background-color: #FFF;
+    width: 12vw;
+    height: 12vw;
+    border-radius: 100%;
+    background: #FFF;
+    border: none;
+    outline: none;
+    color: var(--primary-color);
+    font-size: 10vw;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    margin-bottom: 5vw;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    z-index: 1;
+    transform: translateY(calc(5vw + 12vw));
+    transition: transform 0.5s ease;
+}
+
+.fab-select {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFF;
+    width: 12vw;
+    height: 12vw;
+    border-radius: 100%;
+    background: #FFF;
+    border: none;
+    outline: none;
+    color: var(--primary-color);
+    font-size: 10vw;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    margin-bottom: 5vw;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    z-index: 1;
+    transform: translateY(calc(5vw + 12vw + 5vw + 12vw));
+    transition: transform 0.5s ease;
+}
+
+.fab-select.show {
+    transform: none;
+}
+
+.fab-add.show {
+    transform: none;
 }
 
 .fab-notes.close {
