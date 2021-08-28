@@ -156,6 +156,9 @@ textarea:focus, input:focus {
 }
 
 .fab-notes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #FFF;
     width: 15vw;
     height: 15vw;
@@ -177,6 +180,9 @@ textarea:focus, input:focus {
 }
 
 .fab-add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #FFF;
     width: 12vw;
     height: 12vw;
