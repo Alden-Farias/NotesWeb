@@ -235,15 +235,6 @@ function createNote(pinned) {
 
 let fabIsOpen = false
 
-// $(window).click(function () {
-//     if (fabIsOpen) {
-//         $("#fab-select-note").removeClass("show")
-//         $("#fab-add-note").removeClass("show")
-//         $("#plus-to-animate").css("transform", "rotate(0deg)")
-//         fabIsOpen = false
-//     }
-// });
-
 function closeMenu() {
     $("#fab-select-note").removeClass("show")
     $("#fab-add-note").removeClass("show")
@@ -262,8 +253,15 @@ $("#fab-notes").click(function (e) {
         closeMenu()
     }
 
-    // openDialog()
+    //
 });
+
+$("#fab-select-note").on("click", function () {
+
+})
+$("#fab-add-note").on("click", function () {
+    openDialog()
+})
 
 let noteBodyDiv = $("#note-body-notes");
 let noteBodyDivPlaceholder = $("#note-body-placeholder-notes")
