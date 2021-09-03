@@ -74,6 +74,15 @@ body {
     position: absolute;
 }
 
+.default-text {
+    margin: 0;
+    font-size: 7vw;
+    color: rgb(100, 99, 99);
+    padding-top: 20vh;
+    text-align: center;
+    margin: 10px;
+}
+
 .pinned-notes {
     padding: 0 3vw;
 }

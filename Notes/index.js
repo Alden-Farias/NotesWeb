@@ -85,12 +85,35 @@ function appendNote(title, body, isPinned, i) {
     }
 }
 
+function setLabelVisiblility () {
+    if (pinnedNotes.length === 0)
+        $("#pinned-label").css('visibility','hidden')
+    else
+        $("#pinned-label").removeAttr("style")
+    if (otherNotes.length === 0)
+        $("#other-label").css('visibility','hidden')
+    else
+        $("#other-label").removeAttr("style")
+}
+
+function defaultText()
+{
+    if (pinnedNotes.length == 0 && otherNotes.length == 0)
+        $("#pinned-label").text("Notes you add appear here").css('visibility','visible').toggleClass('default-text');
+    else
+        if (pinnedNotes.length != 0)
+            $("#pinned-label").text("Pinned").removeAttr("style").removeClass('default-text')
+        else
+            $("#pinned-label").css('visibility','hidden')    
+}
+
+
 // Function that retrieves all the notes of the current user from the database
 function getNotes() {
     const Note = Parse.Object.extend("Notes")
     const query = new Parse.Query(Note);
     query.equalTo("username", Parse.User.current().get("username"));
-    query.ascending("createdAt")
+    query.descending("createdAt")
     query.find().then((notes) => {
         pinnedNotes = []
         otherNotes = []
@@ -111,6 +134,8 @@ function getNotes() {
 
         for (let i = 0; i < otherNotes.length; i++)
             appendNote(otherNotes[i].get("title"), otherNotes[i].get("note"), otherNotes[i].get("isPinned"), i)
+        setLabelVisiblility()
+        defaultText()
     }, (error) => {
         showSnackbar(error.message)
     });
@@ -119,7 +144,15 @@ function getNotes() {
 getNotes()
 
 function clearSelection() {
+    pinnedSelectedNotesIndices.forEach((elem) => {
+        $("#"+elem+"-pinned").removeClass("selected")
 
+    });
+    otherSelectedNotesIndices.forEach((elem) => {
+        $("#"+elem+"-other").removeClass("selected")
+    });
+    pinnedSelectedNotesIndices = []
+    otherSelectedNotesIndices = []
 }
 
 // Function that waits for [ms] milliseconds
@@ -214,6 +247,30 @@ function updateNote(noteObject, note) {
     })
 }
 
+function deleteSelectedNotes() {
+    pinnedSelectedNotesIndices.forEach((elem) => {
+        pinnedNotes[elem].destroy().then((myObject) => {
+            if (elem === pinnedSelectedNotesIndices[pinnedSelectedNotesIndices.length-1]) {
+                pinnedSelectedNotesIndices = []
+            }
+          }, (error) => {
+            // The delete failed.
+            // error is a Parse.Error with an error code and message.
+          });
+    })
+    otherSelectedNotesIndices.forEach((elem) => {
+        otherNotes[elem].destroy().then((myObject) => {
+            if (elem === otherSelectedNotesIndices[otherSelectedNotesIndices.length-1]) {
+                getNotes();
+                otherSelectedNotesIndices = []
+            }
+          }, (error) => {
+            // The delete failed.
+            // error is a Parse.Error with an error code and message.
+          });
+    })
+}
+
 function createNote(pinned) {
     let noteBody = $("#note-body-notes").text()
     let noteTitle = $("#note-title-notes").val()
@@ -260,10 +317,10 @@ $("#fab-notes").click(function (e) {
         closeMenu()
     } else if (selectMode) {
         clearSelection()
+        closeMenu()
         sleep(500).then(() => {
             $("#fab-add-note").html('<svg height="4.5vw" viewBox="0 0 387.04 387.04"><polygon fill="var(--primary-color)" points="233.05 154.02 233.05 0 154.05 0 154.05 154.04 0 154.04 0 233.01 154.05 233.01 154.05 387.04 233.05 387.04 233.05 233.01 387.04 233.01 387.04 154.02 233.05 154.02" /></svg>')
         })
-        closeMenu()
         selectMode = false
     }
 });
@@ -292,7 +349,10 @@ $("#fab-select-note").on("click", function () {
 
 $("#fab-add-note").on("click", function () {
     if (!selectMode) {
+        closeMenu()
         openDialog()
+    } else {
+        deleteSelectedNotes()
     }
 })
 
