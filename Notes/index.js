@@ -6,7 +6,9 @@ if (!Parse.User.current()) {
 }
 
 let pinnedNotes = [];
+let pinnedSelectedNotesIndices = [];
 let otherNotes = [];
+let otherSelectedNotesIndices = [];
 let newNoteOpen = false
 let noteIdentifier = {
     pinned: undefined,
@@ -115,6 +117,10 @@ function getNotes() {
 }
 
 getNotes()
+
+function clearSelection() {
+
+}
 
 // Function that waits for [ms] milliseconds
 function sleep(ms) {
@@ -234,6 +240,7 @@ function createNote(pinned) {
 }
 
 let fabIsOpen = false
+let selectMode = false
 
 function closeMenu() {
     $("#fab-select-note").removeClass("show")
@@ -244,23 +251,49 @@ function closeMenu() {
 
 // Called when the FloatingActionButton is clicked
 $("#fab-notes").click(function (e) {
-    if (!fabIsOpen) {
+    if (!fabIsOpen && !selectMode) {
         $("#fab-select-note").addClass("show")
         $("#fab-add-note").addClass("show")
         $("#plus-to-animate").css("transform", "rotate(45deg)")
         fabIsOpen = true
-    } else {
+    } else if (fabIsOpen) {
         closeMenu()
+    } else if (selectMode) {
+        clearSelection()
+        sleep(500).then(() => {
+            $("#fab-add-note").html('<svg height="4.5vw" viewBox="0 0 387.04 387.04"><polygon fill="var(--primary-color)" points="233.05 154.02 233.05 0 154.05 0 154.05 154.04 0 154.04 0 233.01 154.05 233.01 154.05 387.04 233.05 387.04 233.05 233.01 387.04 233.01 387.04 154.02 233.05 154.02" /></svg>')
+        })
+        closeMenu()
+        selectMode = false
     }
-
-    //
 });
 
-$("#fab-select-note").on("click", function () {
 
+
+/*
+SELECT SVG
+<svg viewBox="0 0 3.16667 4"><path class="cls-1" d="M2.08333,4A1.28147,1.28147,0,0,1,1.171,3.62217L.09333,2.5445A.319.319,0,0,1,.31833,2a.50237.50237,0,0,1,.2235.05267L1,2.28183V.33333a.33334.33334,0,0,1,.66667,0V.87817A.33063.33063,0,0,1,1.83333.83333a.33417.33417,0,0,1,.31467.223.33337.33337,0,0,1,.5.16667.33327.33327,0,0,1,.51867.277V2.91667A1.08459,1.08459,0,0,1,2.08333,4Z"/></svg>
+
+
+
+DUSTBIN SVG
+<svg viewBox="0 0 24 24" height="7vw"><path fill="var(--primary-color)" d="M6,19c0,1.1 0.9,2 2,2h8c1.1,0 2,-0.9 2,-2V7H6v12zM19,4h-3.5l-1,-1h-5l-1,1H5v2h14V4z" /></svg>
+
+PLUS SVG
+<svg height="4.5vw" viewBox="0 0 387.04 387.04"><polygon fill="var(--primary-color)" points="233.05 154.02 233.05 0 154.05 0 154.05 154.04 0 154.04 0 233.01 154.05 233.01 154.05 387.04 233.05 387.04 233.05 233.01 387.04 233.01 387.04 154.02 233.05 154.02" /></svg>
+ */
+
+$("#fab-select-note").on("click", function () {
+    $("#fab-select-note").removeClass("show")
+    $("#fab-add-note").html('<svg viewBox="0 0 24 24" height="7vw"><path fill="var(--primary-color)" d="M6,19c0,1.1 0.9,2 2,2h8c1.1,0 2,-0.9 2,-2V7H6v12zM19,4h-3.5l-1,-1h-5l-1,1H5v2h14V4z" /></svg>')
+    fabIsOpen = false
+    selectMode = true
 })
+
 $("#fab-add-note").on("click", function () {
-    openDialog()
+    if (!selectMode) {
+        openDialog()
+    }
 })
 
 let noteBodyDiv = $("#note-body-notes");
@@ -312,37 +345,109 @@ $("#fab-pin-note").on("click", function () {
 })
 
 $("#pinned-notes-1").on("click", "div", function (elem) {
-    var index = $(this).attr("id").match(/\d+/)[0];
-    noteIdentifier = {
-        pinned: true,
-        id: parseInt(index)
+    if (!selectMode) {
+        let index = $(this).attr("id").match(/\d+/)[0];
+        noteIdentifier = {
+            pinned: true,
+            id: parseInt(index)
+        }
+        openDialog(pinnedNotes[index].get("title"), pinnedNotes[index].get("note"))
+    } else {
+        let targetElement = $(this)
+        if (elem.target !== this)
+            targetElement = $(elem.target).parent()
+        let index = $(this).attr("id").match(/\d+/)[0];
+        if (!pinnedSelectedNotesIndices.includes(index)) {
+            pinnedSelectedNotesIndices.push(index)
+            targetElement.addClass("selected")
+            console.log("Selected")
+        } else {
+            const indexOfIndex = pinnedSelectedNotesIndices.indexOf(index);
+            if (indexOfIndex > -1) {
+                pinnedSelectedNotesIndices.splice(indexOfIndex, 1);
+            }
+            targetElement.removeClass("selected")
+            console.log("Deselected")
+        }
     }
-    openDialog(pinnedNotes[index].get("title"), pinnedNotes[index].get("note"))
 })
 $("#pinned-notes-2").on("click", "div", function (elem) {
-    var index = $(this).attr("id").match(/\d+/)[0];
-    noteIdentifier = {
-        pinned: true,
-        id: parseInt(index)
+    if (!selectMode) {
+        var index = $(this).attr("id").match(/\d+/)[0];
+        noteIdentifier = {
+            pinned: true,
+            id: parseInt(index)
+        }
+        openDialog(pinnedNotes[index].get("title"), pinnedNotes[index].get("note"))
+    } else {
+        let targetElement = $(this)
+        if (elem.target !== this)
+            targetElement = $(elem.target).parent()
+        var index = $(this).attr("id").match(/\d+/)[0];
+        if (!pinnedSelectedNotesIndices.includes(index)) {
+            pinnedSelectedNotesIndices.push(index)
+            targetElement.addClass("selected")
+            console.log("Selected")
+        } else {
+            const indexOfIndex = pinnedSelectedNotesIndices.indexOf(index);
+            if (indexOfIndex > -1) {
+                pinnedSelectedNotesIndices.splice(indexOfIndex, 1);
+            }
+            targetElement.removeClass("selected")
+            console.log("Deselected")
+        }
     }
-    openDialog(pinnedNotes[index].get("title"), pinnedNotes[index].get("note"))
 })
 
 $("#other-notes-1").on("click", "div", function (elem) {
-    var index = $(this).attr("id").match(/\d+/)[0];
-    noteIdentifier = {
-        pinned: false,
-        id: parseInt(index)
+    if (!selectMode) {
+        var index = $(this).attr("id").match(/\d+/)[0];
+        noteIdentifier = {
+            pinned: false,
+            id: parseInt(index)
+        }
+        openDialog(otherNotes[index].get("title"), otherNotes[index].get("note"))
+    } else {
+        let targetElement = $(this)
+        var index = $(this).attr("id").match(/\d+/)[0];
+        if (!otherSelectedNotesIndices.includes(index)) {
+            otherSelectedNotesIndices.push(index)
+            targetElement.addClass("selected")
+            console.log("Selected")
+        } else {
+            const indexOfIndex = otherSelectedNotesIndices.indexOf(index);
+            if (indexOfIndex > -1) {
+                otherSelectedNotesIndices.splice(indexOfIndex, 1);
+            }
+            targetElement.removeClass("selected")
+            console.log("Deselected")
+        }
     }
-    openDialog(otherNotes[index].get("title"), otherNotes[index].get("note"))
 })
 $("#other-notes-2").on("click", "div", function (elem) {
-    var index = $(this).attr("id").match(/\d+/)[0];
-    noteIdentifier = {
-        pinned: false,
-        id: parseInt(index)
+    if (!selectMode) {
+        var index = $(this).attr("id").match(/\d+/)[0];
+        noteIdentifier = {
+            pinned: false,
+            id: parseInt(index)
+        }
+        openDialog(otherNotes[index].get("title"), otherNotes[index].get("note"))
+    } else {
+        let targetElement = $(this)
+        var index = $(this).attr("id").match(/\d+/)[0];
+        if (!otherSelectedNotesIndices.includes(index)) {
+            otherSelectedNotesIndices.push(index)
+            targetElement.addClass("selected")
+            console.log("Selected")
+        } else {
+            const indexOfIndex = otherSelectedNotesIndices.indexOf(index);
+            if (indexOfIndex > -1) {
+                otherSelectedNotesIndices.splice(indexOfIndex, 1);
+            }
+            targetElement.removeClass("selected")
+            console.log("Deselected")
+        }
     }
-    openDialog(otherNotes[index].get("title"), otherNotes[index].get("note"))
 })
 // Used to detect back button pressed on mobile devices
 $(window).on("navigate", function (event, data) {
