@@ -107,9 +107,14 @@ body {
     border-radius: 4vw;
 }
 
-.card-display-note:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+.card-display-note.selected {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
 }
+
+/* .card-display-note:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+} */
 
 .note-title-notes {
     font-family: 'Product Sans';
