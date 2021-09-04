@@ -85,7 +85,7 @@ function appendNote(title, body, isPinned, i) {
     }
 }
 
-function setLabelVisiblility () {
+function setLabelVisibility () {
     if (pinnedNotes.length === 0)
         $("#pinned-label").css('visibility','hidden')
     else
@@ -99,7 +99,7 @@ function setLabelVisiblility () {
 function defaultText()
 {
     if (pinnedNotes.length == 0 && otherNotes.length == 0)
-        $("#pinned-label").text("Notes you add appear here").css('visibility','visible').toggleClass('default-text');
+        $("#pinned-label").text("Notes you add appear here").css('visibility','visible').addClass('default-text');
     else
         if (pinnedNotes.length != 0)
             $("#pinned-label").text("Pinned").removeAttr("style").removeClass('default-text')
@@ -129,12 +129,19 @@ function getNotes() {
                 otherNotes.push(element)
         });
         for (let i = 0; i < pinnedNotes.length; i++) {
+            if (pinnedNotes[i] === undefined) {
+                continue
+            }
             appendNote(pinnedNotes[i].get("title"), pinnedNotes[i].get("note"), pinnedNotes[i].get("isPinned"), i)
         }
 
-        for (let i = 0; i < otherNotes.length; i++)
+        for (let i = 0; i < otherNotes.length; i++) {
+            if (otherNotes[i] === undefined) {
+                continue
+            }
             appendNote(otherNotes[i].get("title"), otherNotes[i].get("note"), otherNotes[i].get("isPinned"), i)
-        setLabelVisiblility()
+        }
+        setLabelVisibility()
         defaultText()
     }, (error) => {
         showSnackbar(error.message)
@@ -250,9 +257,16 @@ function updateNote(noteObject, note) {
 function deleteSelectedNotes() {
     pinnedSelectedNotesIndices.forEach((elem) => {
         pinnedNotes[elem].destroy().then((myObject) => {
-            if (elem === pinnedSelectedNotesIndices[pinnedSelectedNotesIndices.length-1]) {
-                pinnedSelectedNotesIndices = []
-            }
+            pinnedNotes[elem] = undefined
+            $("#"+elem+"-pinned").remove()
+            if ($("#pinned-notes-1").children().length == 0 && $("#pinned-notes-2").children().length == 0 && $("#other-notes-1").children().length == 0 && $("#other-notes-2").children().length == 0) {
+                $("#pinned-label").text("Notes you add appear here").css('visibility','visible').addClass('default-text');
+            } else if ($("#pinned-notes-1").children().length == 0 && $("#pinned-notes-2").children().length == 0)
+                $("#pinned-label").css('visibility','hidden')
+            if ($("#other-notes-1").children().length == 0 && $("#other-notes-2").children().length == 0)
+                $("#other-label").css('visibility','hidden')
+            else
+                $("#other-label").removeAttr("style")
           }, (error) => {
             // The delete failed.
             // error is a Parse.Error with an error code and message.
@@ -260,10 +274,16 @@ function deleteSelectedNotes() {
     })
     otherSelectedNotesIndices.forEach((elem) => {
         otherNotes[elem].destroy().then((myObject) => {
-            if (elem === otherSelectedNotesIndices[otherSelectedNotesIndices.length-1]) {
-                getNotes();
-                otherSelectedNotesIndices = []
-            }
+            otherNotes[elem] = undefined
+            $("#"+elem+"-other").remove()
+            if ($("#pinned-notes-1").children().length == 0 && $("#pinned-notes-2").children().length == 0 && $("#other-notes-1").children().length == 0 && $("#other-notes-2").children().length == 0) {
+                $("#pinned-label").text("Notes you add appear here").css('visibility','visible').addClass('default-text');
+            } else if ($("#pinned-notes-1").children().length == 0 && $("#pinned-notes-2").children().length == 0)
+                $("#pinned-label").css('visibility','hidden')
+            if ($("#other-notes-1").children().length == 0 && $("#other-notes-2").children().length == 0)
+                $("#other-label").css('visibility','hidden')
+            else
+                $("#other-label").removeAttr("style")
           }, (error) => {
             // The delete failed.
             // error is a Parse.Error with an error code and message.

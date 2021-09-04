@@ -75,12 +75,14 @@ body {
 }
 
 .default-text {
-    margin: 0;
+    display: inline-block;
+    white-space: nowrap;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     font-size: 7vw;
     color: rgb(100, 99, 99);
-    padding-top: 20vh;
-    text-align: center;
-    margin: 10px;
+    transform: translate(-50%, -50%);
 }
 
 .pinned-notes {
