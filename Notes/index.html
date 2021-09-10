@@ -18,6 +18,9 @@
     <section class="header-section-fixed">
         <h1 class="header-notes-fixed">Notes</h1>
     </section>
+    <section class="search-section">
+        <input type="text" class="search-input" placeholder="Search">
+    </section>
     <section class="pinned-notes">
         <p id="pinned-label" class="notes-header-notes">Pinned</p>
         <div class="note-holder-notes">
@@ -87,7 +90,7 @@
             </svg>
         </button>
         <button id="fab-notes" class="fab-notes noselect">
-            <svg height="5vw" id="plus-to-animate" class="fab-animation" viewBox="0 0 387.04 387.04">
+            <svg height="5vw" id="plus-to-animate" class="fab-add-close-animation" viewBox="0 0 387.04 387.04">
                 <polygon fill="var(--primary-color)"
                     points="233.05 154.02 233.05 0 154.05 0 154.05 154.04 0 154.04 0 233.01 154.05 233.01 154.05 387.04 233.05 387.04 233.05 233.01 387.04 233.01 387.04 154.02 233.05 154.02" />
             </svg>
@@ -96,6 +99,7 @@
     </div>
     <div id="snackbar"></div>
     <script src="./../config.js"></script>
+    <script src="./database.js"></script>
     <script src="./index.js"></script>
 </body>
 
