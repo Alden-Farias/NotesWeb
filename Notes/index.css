@@ -222,13 +222,17 @@ input:focus {
 .card-dialog-wrapper {
     position: relative;
     top: 50%;
-    transform: translateY(500%);
+    transform: translateY(100vh);
     text-align: right;
     transition: transform 0.5s ease;
 }
 
 .card-dialog-wrapper.show {
     transform: translateY(-50%);
+}
+
+.delete-dialog-card {
+
 }
 
 .fab-save-pin-wrapper {
@@ -360,6 +364,41 @@ input:focus {
     border: none;
 }
 
+.confirmation-dialog-header {
+    margin: 0;
+    padding: 20px 20px 0;
+    font-family: 'Product Sans';
+    text-align: left;
+}
+
+.confirmation-dialog-body {
+    margin: 0;
+
+    padding: 20px;
+    font-family: 'Product Sans';
+    text-align: left;
+}
+.confirmation-dialog-button-yes {
+    background: none;
+    outline: none;
+    border: none;
+    padding-bottom: 20px;
+    margin-right: 20px;
+    font-size: 1rem;
+    font-family: 'Product Sans';
+    text-align: center;
+}
+.confirmation-dialog-button-no {
+    background: none;
+    outline: none;
+    border: none;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    font-size: 1rem;
+    font-family: 'Product Sans';
+    text-align: center;
+}
+
 .fab-wrapper {
     display: flex;
     flex-direction: column;
@@ -369,6 +408,31 @@ input:focus {
     right: 9%;
     bottom: 6%;
     /* height: 45vw; */
+}
+
+.fab-logout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFF;
+    width: 12vw;
+    height: 12vw;
+    border-radius: 100%;
+    background: #FFF;
+    border: none;
+    outline: none;
+    color: var(--primary-color);
+    font-size: 10vw;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    margin-bottom: 5vw;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    z-index: 1;
+    transform: translateY(calc(5vw + 12vw + 5vw + 12vw + 5vw + 12vw));
+    transition: transform 0.5s ease;
+}
+
+.fab-logout.show {
+    transform: none;
 }
 
 .fab-select {
