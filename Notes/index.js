@@ -17,11 +17,14 @@ let otherNotes = [];
 let otherSelectedNotesIndices = [];
 // Boolean which indicates the state of the note dialog
 let noteDialogOpen = false
+let deleteDialogOpen = false
+let logOutDialogOpen = false
 // Object that holds details to navigate to the clicked note. It's value is undefined when the user creates a new note and is assigned a value when the user clicks an existing note
 let noteIdentifier = {
     pinned: undefined,
     id: undefined
 }
+
 
 
 let leftPosFixed;
@@ -196,6 +199,25 @@ function openDialog(title, note) {
     noteDialogOpen = true
 }
 
+function openConfirmationDialog(title, body) {
+    $(".confirmation-dialog-header").text(title)
+    $(".confirmation-dialog-body").text(body)
+    // Showing blur background
+    $("#confirmation-dialog-notes").css("display", "block")
+    sleep(0).then(() => {
+        $("#confirmation-dialog").addClass("show")
+        $("#confirmation-dialog-notes").addClass("show")
+    });
+}
+
+function closeConfirmationDialog() {
+    $("#confirmation-dialog").removeClass("show");
+    $("#confirmation-dialog-notes").removeClass("show");
+    sleep(500).then(() => {
+        $("#confirmation-dialog-notes").removeAttr('style')
+    });
+}
+
 // Method to close the dialog and clear the inputs in the dialog
 function closeDialog() {
     $("#card-dialog").removeClass("show");
@@ -292,6 +314,7 @@ let selectMode = false
 function closeMenu() {
     $("#fab-select-note").removeClass("show")
     $("#fab-add-note").removeClass("show")
+    $("#fab-logout-user").removeClass("show")
     $("#plus-to-animate").removeAttr('style')
     fabIsOpen = false
 }
@@ -301,6 +324,7 @@ $("#fab-notes").click(function (e) {
     if (!fabIsOpen && !selectMode) {
         $("#fab-select-note").addClass("show")
         $("#fab-add-note").addClass("show")
+        $("#fab-logout-user").addClass("show")
         $("#plus-to-animate").css("transform", "rotate(45deg)")
         fabIsOpen = true
     } else if (fabIsOpen) {
@@ -316,7 +340,17 @@ $("#fab-notes").click(function (e) {
 });
 
 $("#fab-select-note").on("click", function () {
+    const numberOfChildrenOfPinnedNotes1Div = $("#pinned-notes-1").children().length;
+    const numberOfChildrenOfPinnedNotes2Div = $("#pinned-notes-2").children().length;
+    const numberOfChildrenOfOtherNotes1Div = $("#other-notes-1").children().length;
+    const numberOfChildrenOfOtherNotes2Div = $("#other-notes-2").children().length;
+    const notesExist = !(numberOfChildrenOfOtherNotes1Div == 0 && numberOfChildrenOfOtherNotes2Div == 0 && numberOfChildrenOfPinnedNotes1Div == 0 && numberOfChildrenOfPinnedNotes2Div == 0)
+    if (!notesExist) {
+        showSnackbar("There are no notes to select")
+        return
+    }
     $("#fab-select-note").removeClass("show")
+    $("#fab-logout-user").removeClass("show")
     $("#fab-add-note").html('<svg viewBox="0 0 24 24" height="7vw"><path fill="var(--primary-color)" d="M6,19c0,1.1 0.9,2 2,2h8c1.1,0 2,-0.9 2,-2V7H6v12zM19,4h-3.5l-1,-1h-5l-1,1H5v2h14V4z" /></svg>')
     fabIsOpen = false
     selectMode = true
@@ -327,13 +361,8 @@ $("#fab-add-note").on("click", function () {
         closeMenu()
         openDialog()
     } else {
-        deleteSelectedNotes()
-        clearSelection()
-        closeMenu()
-        sleep(500).then(() => {
-            $("#fab-add-note").html('<svg height="4.5vw" viewBox="0 0 387.04 387.04"><polygon fill="var(--primary-color)" points="233.05 154.02 233.05 0 154.05 0 154.05 154.04 0 154.04 0 233.01 154.05 233.01 154.05 387.04 233.05 387.04 233.05 233.01 387.04 233.01 387.04 154.02 233.05 154.02" /></svg>')
-        })
-        selectMode = false
+        openConfirmationDialog("Delete", "Are you sure you want to delete these items?")
+        deleteDialogOpen = true
     }
 })
 
@@ -350,7 +379,7 @@ noteBodyDiv.on('input', function () {
 
 $("#fab-close-note").on("click", function () {
     $("#card-dialog").removeClass("show");
-    $("#card-dialog").css("transform", "translateY(-500%)")
+    $("#card-dialog").css("transform", "translateY(-100vh)")
     $("#add-note-dialog-notes").removeClass("show");
     sleep(500).then(() => {
         $("#add-note-dialog-notes").removeAttr('style')
@@ -492,6 +521,38 @@ $("#other-notes-2").on("click", "div", function (elem) {
             console.log("Deselected")
         }
     }
+})
+
+$("#confirmation-dialog-button-no").on("click", function () {
+    closeConfirmationDialog()
+    deleteDialogOpen = false
+    logOutDialogOpen = false
+})
+
+$("#confirmation-dialog-button-yes").on("click", function () {
+    if (deleteDialogOpen) {
+        deleteSelectedNotes()
+        closeConfirmationDialog()
+        clearSelection()
+        closeMenu()
+        sleep(500).then(() => {
+            $("#fab-add-note").html('<svg height="4.5vw" viewBox="0 0 387.04 387.04"><polygon fill="var(--primary-color)" points="233.05 154.02 233.05 0 154.05 0 154.05 154.04 0 154.04 0 233.01 154.05 233.01 154.05 387.04 233.05 387.04 233.05 233.01 387.04 233.01 387.04 154.02 233.05 154.02" /></svg>')
+        })
+        selectMode = false
+        deleteDialogOpen = false
+    } else  if (logOutDialogOpen) {
+        Parse.User.logOut().then(() => {
+            logOutDialogOpen = false
+            closeConfirmationDialog()
+            closeMenu()
+        });
+    }
+
+})
+
+$("#fab-logout-user").on('click', function () {
+    openConfirmationDialog("Logout", "Are you sure you want to logout?")
+    logOutDialogOpen = true
 })
 
 getNotes()
