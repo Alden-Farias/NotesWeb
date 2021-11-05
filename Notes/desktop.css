@@ -55,6 +55,10 @@ body {
     padding: 8px 15px;
 }
 
+.search-input:focus {
+    outline: none;
+}
+
 .pinned-notes {
     display: inline-block;
     width: 30%;
@@ -203,6 +207,9 @@ body {
     margin: 0;
     border: 0;
 }
+.title-input-notes:focus {
+    outline: none;
+}
 
 .note-textarea-notes {
     display: block;
@@ -230,4 +237,182 @@ body {
 
 .note-textarea-placeholder-notes.hide {
     visibility: hidden;
+}
+
+#confirmation-dialog-notes {
+    box-sizing: border-box;
+    position: fixed;
+    display: none;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.16);
+    padding: 0 15px;
+    opacity: 0;
+    backdrop-filter: blur(3px);
+    transition: visibility 0s, opacity 0.5s linear;
+    z-index: 2;
+}
+
+#confirmation-dialog-notes.show {
+    opacity: 1;
+}
+
+#confirmation-dialog {
+    position: relative;
+    top: 50%;
+    transform: translateY(100vh);
+    text-align: right;
+    transition: transform 0.5s ease;
+    text-align: center;
+}
+
+#confirmation-dialog.show {
+    transform: translateY(-50%);
+}
+
+#confirmation-dialog>div{
+    display: inline-block;
+    padding-bottom: 0;
+    text-align: right;
+    width: 50vw;
+    max-width: 500px;
+}
+
+.confirmation-dialog-header {
+    margin: 0;
+    padding: 20px 20px 0;
+    font-family: 'Product Sans';
+    text-align: left;
+}
+
+.confirmation-dialog-body {
+    margin: 0;
+
+    padding: 20px;
+    font-family: 'Product Sans';
+    text-align: left;
+}
+.confirmation-dialog-button-yes {
+    background: none;
+    outline: none;
+    border: none;
+    padding-bottom: 20px;
+    margin-right: 20px;
+    font-size: 1rem;
+    font-family: 'Product Sans';
+    text-align: center;
+}
+.confirmation-dialog-button-no {
+    background: none;
+    outline: none;
+    border: none;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    font-size: 1rem;
+    font-family: 'Product Sans';
+    text-align: center;
+}
+
+.fab-logout, .fab-select, .fab-add {
+    display: none;
+}
+
+.fab-notes {
+    display: none;
+}
+
+
+
+
+
+
+/*********SNACK BAR******************/
+
+/* The snackbar - position it at the bottom and in the middle of the screen */
+
+#snackbar {
+    visibility: hidden;
+    /* Hidden by default. Visible on click */
+    /* min-width: 250px; Set a default minimum width */
+    background-color: rgb(255, 255, 255);
+    /* Black background color */
+    color: rgb(0, 0, 0);
+    /* White text color */
+    text-align: center;
+    /* Centered text */
+    padding: 16px;
+    /* Padding */
+    position: fixed;
+    /* Sit on top of the screen */
+    z-index: 1;
+    /* Add a z-index if needed */
+    left: 50%;
+    /* Center the snackbar */
+    bottom: 30px;
+    /* 30px from the bottom */
+    transform: translateX(-50%);
+    font-family: "Product Sans";
+    border-radius: 100px;
+    /* Rounded borders */
+    white-space: nowrap;
+    z-index: 4;
+    border: 1px solid rgba(0, 0, 0, 0.20);
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+
+#snackbar.show {
+    visibility: visible;
+    /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }

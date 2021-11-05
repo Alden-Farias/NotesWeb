@@ -176,6 +176,13 @@ function openDialog(title, note) {
     $("#note-title-notes").val(title)
     if (note) {
         noteBodyDivPlaceholder.addClass("hide")
+    } else {
+        if (noteBodyDivPlaceholder.hasClass("hide")) {
+            noteBodyDivPlaceholder.removeClass("hide")
+        }
+        if (!noteBodyDivPlaceholder.hasClass("show")) {
+            noteBodyDivPlaceholder.addClass("show")
+        }
     }
     const unpinSVG = '<svg viewBox="0 0 256 256" height="5vw">\n' +
         '    <path fill="#000"\n' +
