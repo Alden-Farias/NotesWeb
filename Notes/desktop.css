@@ -119,7 +119,7 @@ body {
 
 .fab-notes.close {
     position: relative;
-    display: inline-flex;
+    display: none;
     align-items: center;
     float: left;
     justify-content: center;

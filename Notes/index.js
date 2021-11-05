@@ -25,6 +25,7 @@ let noteIdentifier = {
     id: undefined
 }
 
+let viewportWidth;
 
 
 let leftPosFixed;
@@ -35,6 +36,9 @@ function setVars() {
     leftPosFixed = $(".header-notes-fixed").get(0).getBoundingClientRect().left
     leftPosVariable = $(".header-notes").get(0).getBoundingClientRect().left
     difference = leftPosVariable - leftPosFixed
+    viewportWidth = window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
 }
 
 $(window).on("resize", function () {
@@ -189,14 +193,18 @@ function openDialog(title, note) {
     } else {
         $("#fab-pin-note").html(pinSVG)
     }
-    // Showing blur background
-    $("#add-note-dialog-notes").css("display", "block")
-    // Function used to asynchronously show animation/ Showing dialog
-    sleep(0).then(() => {
-        $("#card-dialog").addClass("show");
-        $("#add-note-dialog-notes").addClass("show");
-    });
-    noteDialogOpen = true
+    if (viewportWidth < 768) {
+        // Showing blur background
+        $("#add-note-dialog-notes").css("display", "block")
+        // Function used to asynchronously show animation/ Showing dialog
+        sleep(0).then(() => {
+            $("#card-dialog").addClass("show");
+            $("#add-note-dialog-notes").addClass("show");
+        });
+        noteDialogOpen = true
+    } else {
+        $("#fab-close-note").css("display", "inline-flex")
+    }
 }
 
 function openConfirmationDialog(title, body) {
@@ -220,12 +228,16 @@ function closeConfirmationDialog() {
 
 // Method to close the dialog and clear the inputs in the dialog
 function closeDialog() {
-    $("#card-dialog").removeClass("show");
-    $("#add-note-dialog-notes").removeClass("show");
-    sleep(500).then(() => {
-        $("#add-note-dialog-notes").removeAttr('style')
-    });
-    noteDialogOpen = false
+    if (viewportWidth < 768) {
+        $("#card-dialog").removeClass("show");
+        $("#add-note-dialog-notes").removeClass("show");
+        sleep(500).then(() => {
+            $("#add-note-dialog-notes").removeAttr('style')
+        });
+        noteDialogOpen = false
+    } else {
+        $("#fab-close-note").css("display", "none")
+    }
     sleep(0.5).then(() => {
         noteBodyDivPlaceholder.removeClass("hide")
         $("#note-body-notes").text("")
@@ -378,14 +390,18 @@ noteBodyDiv.on('input', function () {
 });
 
 $("#fab-close-note").on("click", function () {
-    $("#card-dialog").removeClass("show");
-    $("#card-dialog").css("transform", "translateY(-100vh)")
-    $("#add-note-dialog-notes").removeClass("show");
-    sleep(500).then(() => {
-        $("#add-note-dialog-notes").removeAttr('style')
-        $("#card-dialog").removeAttr('style')
-    });
-    noteDialogOpen = false
+    if (viewportWidth < 768) {
+        $("#card-dialog").removeClass("show");
+        $("#card-dialog").css("transform", "translateY(-100vh)")
+        $("#add-note-dialog-notes").removeClass("show");
+        sleep(500).then(() => {
+            $("#add-note-dialog-notes").removeAttr('style')
+            $("#card-dialog").removeAttr('style')
+        });
+        noteDialogOpen = false
+    } else {
+        $("#fab-close-note").css("display", "none")
+    }
     sleep(0.5).then(() => {
         noteBodyDivPlaceholder.removeClass("hide")
         $("#note-body-notes").text("")
